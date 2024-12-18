@@ -7,8 +7,11 @@ defmodule Gbx do
     count = header_chunks |> :binary.decode_unsigned(:little)
     {header_meta, bin} = Gbx.Utils.getHeaderInfo([], rest, count)
 
-    Gbx.Utils.getHeaderData([], bin, header_meta |> Enum.reverse())
-    |> Enum.reduce(Gbx.Map.new(), &Gbx.Map.parse/2)
+    map =
+      Gbx.Utils.getHeaderData([], bin, header_meta |> Enum.reverse())
+      |> Enum.reduce(Gbx.Map.new(), &Gbx.Map.parse/2)
+
+    {:ok, map}
   end
 
   # <<0, 48, 9, 3>> -> 0x03093000
@@ -19,8 +22,11 @@ defmodule Gbx do
     count = header_chunks |> :binary.decode_unsigned(:little)
     {header_meta, bin} = Gbx.Utils.getHeaderInfo([], rest, count)
 
-    Gbx.Utils.getHeaderData([], bin, header_meta |> Enum.reverse())
-    |> Enum.reduce(Gbx.Replay.new(), &Gbx.Replay.parse/2)
+    replay =
+      Gbx.Utils.getHeaderData([], bin, header_meta |> Enum.reverse())
+      |> Enum.reduce(Gbx.Replay.new(), &Gbx.Replay.parse/2)
+
+    {:ok, replay}
   end
 
   def parse(_) do
